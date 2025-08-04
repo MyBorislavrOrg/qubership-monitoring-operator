@@ -94,7 +94,7 @@ jobs:
       id: anchore-scan
       uses: anchore/scan-action@v6
       with:
-        image: ${{ steps.docker-build-push.outputs.imageid }}
+        image: "localbuild/${{ steps.docker-build-push.outputs.imageid }}"
         fail-build: false
     - name: Upload SARIF result
       id: upload-sarif
