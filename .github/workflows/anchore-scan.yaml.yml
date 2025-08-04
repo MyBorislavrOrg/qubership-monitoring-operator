@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+############## SBOM scan #######################################
       - name: Create SBOM
         uses: anchore/sbom-action@v0
         with:
@@ -21,17 +23,28 @@ jobs:
 
       - name: Scan SBOM
         uses: anchore/scan-action@v6
+        id: scan-sbom
         with:
           sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
-      - name: Scan current project
-        id: sarif
-        uses: anchore/scan-action@v6
-        with:
-          path: "."
           fail-build: false
+
       - name: Upload SARIF result
         id: upload-sarif
         if: ${{ github.event_name != 'pull_request_target' }}
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{ steps.sarif.outputs.sarif }}
+          sarif_file: ${{ steps.scan-sbom.outputs.sarif }}
+###############################################################
+
+############## Project scan ###################################
+      - name: Scan current project
+        id: scan-current-project
+        uses: anchore/scan-action@v6
+        with:
+          path: "."
+          fail-build: false
+      - name: Upload SARIF result
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.scan-current-project.outputs.sarif }}
