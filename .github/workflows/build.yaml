@@ -77,6 +77,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build and push
+      id: docker-build-push
       uses: docker/build-push-action@v6
       with:
         no-cache: true
@@ -88,3 +89,15 @@ jobs:
         provenance: false
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+    - name: Anchore scan image
+      id: anchore-scan
+      uses: anchore/scan-action@v6
+      with:
+        image: ${{ steps.docker-build-push.outputs.imageid }}
+        fail-build: false
+    - name: Upload SARIF result
+      id: upload-sarif
+      if: ${{ github.event_name != 'pull_request_target' }}
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{ steps.anchore-scan.outputs.sarif }}
