@@ -5,7 +5,7 @@
 [![Super-Linter](https://github.com/Netcracker/qubership-monitoring-operator/actions/workflows/super-linter.yaml/badge.svg)](https://github.com/Netcracker/qubership-monitoring-operator/actions/workflows/super-linter.yaml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Netcracker/qubership-monitoring-operator)](https://goreportcard.com/report/github.com/Netcracker/qubership-monitoring-operator)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-![Repo Size](https://img.shields.io/github/repo-size/Netcracker/qubership-pipelines-common-python-library)
+![Repo Size](https://img.shields.io/github/repo-size/Netcracker/qubership-monitoring-operator)
 A comprehensive Kubernetes operator that simplifies the deployment and management of production-ready monitoring stacks. Built to handle complex monitoring environments with minimal operational overhead while providing maximum flexibility and scalability.
 
 ## What is Qubership Monitoring Operator?
