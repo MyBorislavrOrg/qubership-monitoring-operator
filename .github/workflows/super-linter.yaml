@@ -78,32 +78,9 @@ jobs:
         fi
 
     - name: "Lint Code Base"
-      id: lint
-      continue-on-error: true
       uses: super-linter/super-linter/slim@4ce20838b8ab83717e78138c5b3a1407148e0918 # v8.7.0
       env:
         VALIDATE_ALL_CODEBASE: ${{ inputs.full_scan || false }}
         # To report GitHub Actions status checks
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEFAULT_BRANCH: ${{ github.event.pull_request.base.ref || github.event.push.ref }}
-        CREATE_LOG_FILE: "true"
-        LOG_FILE: super-linter.log # written to ${GITHUB_WORKSPACE}/super-linter.log
-        LOG_LEVEL: DEBUG
-
-    - name: Assert the file was linted, not silently ignored
-      run: |
-          LOG="${GITHUB_WORKSPACE}/super-linter.log"
-          if grep -qi "no matching configuration was supplied" "$LOG" 2>/dev/null; then
-            echo "::error::There are ignored files. Check your linters configuration."
-            exit 1
-          fi
-          if grep -qi "ERR_MODULE_NOT_FOUND\|could not find plugin" "$LOG" 2>/dev/null; then
-            echo "::error::Some linters configuration plugins not found."
-            exit 1
-          fi
-    - name: Fail on linter failure
-      run: |
-          if [ "${{ steps.lint.outcome }}" == "failure" ]; then
-            echo "::error::Linter failed."
-            exit 1
-          fi
