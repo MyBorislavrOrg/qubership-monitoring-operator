@@ -38,7 +38,6 @@ jobs:
       statuses: write
     steps:
     - name: "Get the common linters configuration"
-      if: true
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         ref: main # 463-fix-false-green-json-validation-in-shared-super-linter-config # main # fix/superlinter-config
@@ -48,7 +47,6 @@ jobs:
         sparse-checkout: |
           config/linters
     - name: "Move configs"
-      if: true
       run: |
         cp --update=none -vRT ./common-configs/config/linters /tmp/linters
         rm -rf ./common-configs
@@ -60,7 +58,6 @@ jobs:
         fetch-depth: 0
         persist-credentials: false
     - name: "Apply the common linters configuration"
-      if: true
       run: |
         mkdir -p ./.github/linters
         cp --update=none -vRT /tmp/linters ./.github/linters
