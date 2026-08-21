@@ -87,7 +87,7 @@ jobs:
         DEFAULT_BRANCH: ${{ github.event.pull_request.base.ref || github.event.push.ref }}
         SAVE_SUPER_LINTER_OUTPUT: "true"
         SAVE_SUPER_LINTER_SUMMARY: "true"
-        LOG_LEVEL: WARN
+        # LOG_LEVEL: WARN
 
     - name: Upload Super-Linter output
       if: always()
@@ -100,7 +100,7 @@ jobs:
       if: always()
       run: |
         LOG=$(gh run view ${{ github.run_id }} --log 2>/dev/null || true)
-        echo "$LOG" | grep -iE "no .*configuration file|disabling|missing config|not found.*config" \
+        echo "$LOG" | grep -iE "no .*configuration file|disabling|missing config|not found.*config | File ignored because no matching configuration was supplied" \
         | tee skipped-files.txt
         if [ -s skipped-files.txt ]; then
           echo "### ⚠️ Skipped files due to missing configuration"
