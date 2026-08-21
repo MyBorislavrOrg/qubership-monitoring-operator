@@ -100,6 +100,7 @@ jobs:
     - name: Collect skipped files
       if: always()
       run: |
+        sudo chmod 777 super-linter.log
         grep -B 1 -iE "File ignored because" \
         super-linter.log > skipped-files.txt
         if [ -s skipped-files.txt ]; then
