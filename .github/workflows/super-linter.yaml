@@ -84,3 +84,14 @@ jobs:
         # To report GitHub Actions status checks
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEFAULT_BRANCH: ${{ github.event.pull_request.base.ref || github.event.push.ref }}
+        SAVE_SUPER_LINTER_OUTPUT: "true"
+        SAVE_SUPER_LINTER_SUMMARY: "true"
+        LOG_LEVEL: NOTICE
+
+    - name: Upload Super-Linter output
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: super-linter-output
+        path: ${{ github.workspace }}/super-linter-output
+        if-no-files-found: warn
