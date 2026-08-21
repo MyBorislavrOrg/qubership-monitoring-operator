@@ -40,7 +40,7 @@ jobs:
     - name: "Get the common linters configuration"
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
-        ref: main # 463-fix-false-green-json-validation-in-shared-super-linter-config # main # fix/superlinter-config
+        ref: 463-fix-false-green-json-validation-in-shared-super-linter-config # main # fix/superlinter-config
         repository: netcracker/.github
         persist-credentials: false
         path: common-configs
