@@ -99,16 +99,14 @@ jobs:
         name: super-linter-output
         path: ${{ github.workspace }}/super-linter-output
         if-no-files-found: warn
-    - name: Собрать список пропущенных проверок
+    - name: Collect skipped files
       if: always()
       run: |
         LOG=$(gh run view ${{ github.run_id }} --log 2>/dev/null || true)
         echo "$LOG" | grep -iE "no .*configuration file|disabling|missing config|not found.*config" \
         | tee skipped-checks.txt
         if [ -s skipped-checks.txt ]; then
-        {
           echo "### ⚠️ Skipped checks due to missing configuration"
-        } >> "$GITHUB_STEP_SUMMARY"
         fi
     - name: Upload Super-Linter output
       if: always()
