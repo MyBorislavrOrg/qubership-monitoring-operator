@@ -88,7 +88,7 @@ jobs:
         SAVE_SUPER_LINTER_OUTPUT: "true"
         SAVE_SUPER_LINTER_SUMMARY: "true"
         CREATE_LOG_FILE: "true"
-        LOG_FILE: super-linter.log
+        LOG_FILE: ${{ github.workspace }}/super-linter.log
 
     - name: Upload Super-Linter output
       if: always()
@@ -101,8 +101,7 @@ jobs:
       if: always()
       run: |
         grep -iE "File ignored because" \
-        super-linter.log \
-        | tee skipped-files.txt
+        ${{ github.workspace }}/super-linter.log > skipped-files.txt
         if [ -s skipped-files.txt ]; then
           echo "### ⚠️ Skipped files due to missing configuration"
         else
