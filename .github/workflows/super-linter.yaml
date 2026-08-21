@@ -100,7 +100,7 @@ jobs:
       if: always()
       run: |
         LOG=$(gh run view ${{ github.run_id }} --log 2>/dev/null || true)
-        echo "$LOG" | grep -iE "no .*configuration file|disabling|missing config|not found.*config | File ignored because no matching configuration was supplied" \
+        echo "$LOG" | grep -iE "no .*configuration file|disabling|missing config|not found.*config|File ignored because no matching configuration was supplied" \
         | tee skipped-files.txt
         if [ -s skipped-files.txt ]; then
           echo "### ⚠️ Skipped files due to missing configuration"
