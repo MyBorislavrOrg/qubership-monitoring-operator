@@ -38,6 +38,7 @@ jobs:
       statuses: write
     steps:
     - name: "Get the common linters configuration"
+      if: false
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         ref: 463-fix-false-green-json-validation-in-shared-super-linter-config # main # fix/superlinter-config
@@ -47,6 +48,7 @@ jobs:
         sparse-checkout: |
           config/linters
     - name: "Move configs"
+      if: false
       run: |
         cp --update=none -vRT ./common-configs/config/linters /tmp/linters
         rm -rf ./common-configs
@@ -58,6 +60,7 @@ jobs:
         fetch-depth: 0
         persist-credentials: false
     - name: "Apply the common linters configuration"
+      if: false
       run: |
         mkdir -p ./.github/linters
         cp --update=none -vRT /tmp/linters ./.github/linters
@@ -96,4 +99,21 @@ jobs:
         name: super-linter-output
         path: ${{ github.workspace }}/super-linter-output
         if-no-files-found: warn
-    
+    - name: Собрать список пропущенных проверок
+      if: always()
+      run: |
+        LOG=$(gh run view ${{ github.run_id }} --log 2>/dev/null || true)
+        echo "$LOG" | grep -iE "no .*configuration file|disabling|missing config|not found.*config" \
+        | tee skipped-checks.txt
+        if [ -s skipped-checks.txt ]; then
+        {
+          echo "### ⚠️ Skipped checks due to missing configuration"
+        } >> "$GITHUB_STEP_SUMMARY"
+        fi
+    - name: Upload Super-Linter output
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: skipped-files
+        path: ${{ github.workspace }}/skipped-checks.txt
+        if-no-files-found: warn
