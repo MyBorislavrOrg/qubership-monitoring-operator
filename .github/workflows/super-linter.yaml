@@ -37,30 +37,30 @@ jobs:
       packages: read
       statuses: write
     steps:
-    - name: "Get the common linters configuration"
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        ref: 463-fix-false-green-json-validation-in-shared-super-linter-config # main # fix/superlinter-config
-        repository: netcracker/.github
-        persist-credentials: false
-        path: common-configs
-        sparse-checkout: |
-          config/linters
-    - name: "Move configs"
-      run: |
-        cp --update=none -vRT ./common-configs/config/linters /tmp/linters
-        rm -rf ./common-configs
-      # To report GitHub Actions status checks
-    - name: "Checkout code"
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        # Full git history is needed to get a proper list of changed files within `super-linter`
-        fetch-depth: 0
-        persist-credentials: false
-    - name: "Apply the common linters configuration"
-      run: |
-        mkdir -p ./.github/linters
-        cp --update=none -vRT /tmp/linters ./.github/linters
+#    - name: "Get the common linters configuration"
+#      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+#      with:
+#        ref: 463-fix-false-green-json-validation-in-shared-super-linter-config # main # fix/superlinter-config
+#        repository: netcracker/.github
+#        persist-credentials: false
+#        path: common-configs
+#        sparse-checkout: |
+#          config/linters
+#    - name: "Move configs"
+#      run: |
+#        cp --update=none -vRT ./common-configs/config/linters /tmp/linters
+#        rm -rf ./common-configs
+#      # To report GitHub Actions status checks
+#    - name: "Checkout code"
+#      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+#      with:
+#        # Full git history is needed to get a proper list of changed files within `super-linter`
+#        fetch-depth: 0
+#        persist-credentials: false
+#    - name: "Apply the common linters configuration"
+#      run: |
+#        mkdir -p ./.github/linters
+#        cp --update=none -vRT /tmp/linters ./.github/linters
 
     - name: "Load super-linter environment file"
       shell: bash
