@@ -78,6 +78,7 @@ jobs:
         fi
 
     - name: "Lint Code Base"
+      id: super-linter
       uses: super-linter/super-linter/slim@4ce20838b8ab83717e78138c5b3a1407148e0918 # v8.7.0
       env:
         VALIDATE_ALL_CODEBASE: ${{ inputs.full_scan || false }}
@@ -86,7 +87,22 @@ jobs:
         DEFAULT_BRANCH: ${{ github.event.pull_request.base.ref || github.event.push.ref }}
         SAVE_SUPER_LINTER_OUTPUT: "true"
         SAVE_SUPER_LINTER_SUMMARY: "true"
-        LOG_LEVEL: NOTICE
+        LOG_LEVEL: WARN
+
+    - name: Collect skipped files
+      if: always()
+      run: |
+        LOG=$(gh run view ${{ github.run_id }} --log 2>/dev/null || true)
+        echo "$LOG" | grep -iE "no .*configuration file|disabling|missing config|not found.*config" \
+        | tee skipped-checks.txt
+        if [ -s skipped-checks.txt ]; then
+        {
+          echo "### ⚠️ Skipped files because of missing configuration"
+          echo '```'
+          cat skipped-checks.txt
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"
+        fi
 
     - name: Upload Super-Linter output
       if: always()
@@ -95,3 +111,4 @@ jobs:
         name: super-linter-output
         path: ${{ github.workspace }}/super-linter-output
         if-no-files-found: warn
+    
