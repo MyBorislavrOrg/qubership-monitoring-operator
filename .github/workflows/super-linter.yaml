@@ -100,7 +100,7 @@ jobs:
     - name: Collect skipped files
       if: always()
       run: |
-        grep -iE "File ignored because" \
+        grep -B 1 -iE "File ignored because" \
         ${{ github.workspace }}/super-linter.log > skipped-files.txt
         if [ -s skipped-files.txt ]; then
           echo "### ⚠️ Skipped files due to missing configuration"
