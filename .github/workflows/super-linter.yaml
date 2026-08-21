@@ -37,30 +37,30 @@ jobs:
       packages: read
       statuses: write
     steps:
-#    - name: "Get the common linters configuration"
-#      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-#      with:
-#        ref: 463-fix-false-green-json-validation-in-shared-super-linter-config # main # fix/superlinter-config
-#        repository: netcracker/.github
-#        persist-credentials: false
-#        path: common-configs
-#        sparse-checkout: |
-#          config/linters
-#    - name: "Move configs"
-#      run: |
-#        cp --update=none -vRT ./common-configs/config/linters /tmp/linters
-#        rm -rf ./common-configs
-#      # To report GitHub Actions status checks
+    - name: "Get the common linters configuration"
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: 463-fix-false-green-json-validation-in-shared-super-linter-config # main # fix/superlinter-config
+        repository: netcracker/.github
+        persist-credentials: false
+        path: common-configs
+        sparse-checkout: |
+          config/linters
+    - name: "Move configs"
+      run: |
+        cp --update=none -vRT ./common-configs/config/linters /tmp/linters
+        rm -rf ./common-configs
+      # To report GitHub Actions status checks
     - name: "Checkout code"
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         # Full git history is needed to get a proper list of changed files within `super-linter`
         fetch-depth: 0
         persist-credentials: false
-#    - name: "Apply the common linters configuration"
-#      run: |
-#        mkdir -p ./.github/linters
-#        cp --update=none -vRT /tmp/linters ./.github/linters
+    - name: "Apply the common linters configuration"
+      run: |
+        mkdir -p ./.github/linters
+        cp --update=none -vRT /tmp/linters ./.github/linters
 
     - name: "Load super-linter environment file"
       shell: bash
@@ -88,21 +88,6 @@ jobs:
         SAVE_SUPER_LINTER_OUTPUT: "true"
         SAVE_SUPER_LINTER_SUMMARY: "true"
         LOG_LEVEL: WARN
-
-    - name: Collect skipped files
-      if: always()
-      run: |
-        LOG=$(gh run view ${{ github.run_id }} --log 2>/dev/null || true)
-        echo "$LOG" | grep -iE "no .*configuration file|disabling|missing config|not found.*config" \
-        | tee skipped-checks.txt
-        if [ -s skipped-checks.txt ]; then
-        {
-          echo "### ⚠️ Skipped files because of missing configuration"
-          echo '```'
-          cat skipped-checks.txt
-          echo '```'
-        } >> "$GITHUB_STEP_SUMMARY"
-        fi
 
     - name: Upload Super-Linter output
       if: always()
