@@ -104,14 +104,16 @@ jobs:
       run: |
         LOG=$(gh run view ${{ github.run_id }} --log 2>/dev/null || true)
         echo "$LOG" | grep -iE "no .*configuration file|disabling|missing config|not found.*config" \
-        | tee skipped-checks.txt
-        if [ -s skipped-checks.txt ]; then
-          echo "### ⚠️ Skipped checks due to missing configuration"
+        | tee skipped-files.txt
+        if [ -s skipped-files.txt ]; then
+          echo "### ⚠️ Skipped files due to missing configuration"
+        else
+          rm -f skipped-files.txt
         fi
-    - name: Upload Super-Linter output
+    - name: Upload skipped files list
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: skipped-files
-        path: ${{ github.workspace }}/skipped-checks.txt
+        path: ${{ github.workspace }}/skipped-files.txt
         if-no-files-found: warn
