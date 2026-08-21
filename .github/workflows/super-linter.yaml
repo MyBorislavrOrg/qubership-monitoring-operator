@@ -101,8 +101,7 @@ jobs:
       if: always()
       run: |
         sudo chmod 777 super-linter.log
-        grep -B 1 -iE "File ignored because" \
-        super-linter.log > skipped-files.txt
+        grep -B 1 -iE "File ignored because" super-linter.log > skipped-files.txt || true
         if [ -s skipped-files.txt ]; then
           echo "### ⚠️ Skipped files due to missing configuration"
         else
