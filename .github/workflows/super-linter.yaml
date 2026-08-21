@@ -101,7 +101,7 @@ jobs:
       if: always()
       run: |
         grep -B 1 -iE "File ignored because" \
-        ${DEFAULT_WORKSPACE}/super-linter.log > skipped-files.txt
+        super-linter.log > skipped-files.txt
         if [ -s skipped-files.txt ]; then
           echo "### ⚠️ Skipped files due to missing configuration"
         else
